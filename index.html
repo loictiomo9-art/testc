@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#2c3e50">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Chess1500">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♟️</text></svg>">
+    <title>Échecs 1500 ELO</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <h1>Échecs 1500 ELO</h1>
+            <div class="game-info">
+                <div class="player-info">
+                    <span class="player-label">Vous</span>
+                    <span class="captured-pieces" id="player-captured"></span>
+                </div>
+                <div class="score-board">
+                    <span id="game-status">Votre tour</span>
+                    <button id="new-game-btn" class="btn">Nouvelle partie</button>
+                </div>
+                <div class="player-info">
+                    <span class="player-label">IA (1500)</span>
+                    <span class="captured-pieces" id="ai-captured"></span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="board-container">
+            <div id="chessboard" class="chessboard"></div>
+        </div>
+        
+        <div class="controls">
+            <button id="flip-btn" class="btn">🔄 Retourner</button>
+            <button id="undo-btn" class="btn">↩ Annuler</button>
+            <div class="difficulty-display">
+                Niveau: <span id="difficulty-level">1500 ELO</span>
+            </div>
+        </div>
+        
+        <div class="move-history">
+            <h3>Historique des coups</h3>
+            <div id="move-list"></div>
+        </div>
+    </div>
+    
+    <script src="js/chess-engine.js"></script>
+    <script src="js/ai.js"></script>
+    <script src="js/main.js"></script>
+</body>
+      </html>
