@@ -1,0 +1,230 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.game-container {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 500px;
+    width: 100%;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    color: #2c3e50;
+    font-size: 1.8em;
+    margin-bottom: 10px;
+}
+
+.game-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.player-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.player-label {
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.captured-pieces {
+    font-size: 1.2em;
+    min-height: 24px;
+}
+
+.score-board {
+    text-align: center;
+}
+
+#game-status {
+    display: block;
+    font-weight: bold;
+    color: #e74c3c;
+    margin-bottom: 5px;
+    font-size: 0.9em;
+}
+
+.btn {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background 0.3s;
+}
+
+.btn:active {
+    background: #2980b9;
+    transform: scale(0.95);
+}
+
+.board-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.chessboard {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    width: min(350px, 90vw);
+    height: min(350px, 90vw);
+    border: 3px solid #2c3e50;
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.square {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: min(40px, 8vw);
+    cursor: pointer;
+    position: relative;
+    transition: background 0.2s;
+}
+
+.square.light {
+    background: #f0d9b5;
+}
+
+.square.dark {
+    background: #b58863;
+}
+
+.square.selected {
+    background: #f6f669 !important;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.square.valid-move {
+    background: #7fc97f !important;
+    opacity: 0.7;
+}
+
+.square.valid-move::after {
+    content: '';
+    position: absolute;
+    width: 30%;
+    height: 30%;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+}
+
+.square.last-move {
+    background: #cdd26a !important;
+}
+
+.square.king-check {
+    background: #e74c3c !important;
+    animation: check-pulse 1s infinite;
+}
+
+@keyframes check-pulse {
+    0%, 100% { background: #e74c3c !important; }
+    50% { background: #c0392b !important; }
+}
+
+.piece {
+    pointer-events: none;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 15px 0;
+    gap: 10px;
+}
+
+.difficulty-display {
+    background: #34495e;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.8em;
+}
+
+.move-history {
+    background: #ecf0f1;
+    border-radius: 10px;
+    padding: 15px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.move-history h3 {
+    margin-bottom: 10px;
+    color: #2c3e50;
+    font-size: 1em;
+}
+
+#move-list {
+    display: grid;
+    grid-template-columns: auto 1fr 1fr;
+    gap: 5px;
+    font-family: monospace;
+    font-size: 0.9em;
+}
+
+.move-number {
+    color: #7f8c8d;
+}
+
+.move-white, .move-black {
+    color: #2c3e50;
+    padding: 2px 5px;
+    border-radius: 3px;
+}
+
+.move-white.current, .move-black.current {
+    background: #f6f669;
+}
+
+@media (max-width: 400px) {
+    .game-container {
+        padding: 10px;
+    }
+    
+    .header h1 {
+        font-size: 1.4em;
+    }
+    
+    .btn {
+        padding: 6px 12px;
+        font-size: 0.8em;
+    }
+  }
