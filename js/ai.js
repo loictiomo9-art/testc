@@ -91,4 +91,134 @@ class ChessAI {
         
         if (pieceType === 'p') return pawnTable[r][c];
         if (pieceType === 'n') return knightTable[r][c];
-        if (pieceType === 'b') return bishopTable[r
+        if (pieceType === 'b') return bishopTable[r][c];
+        
+        return 0;
+    }
+    
+    evaluateCenterControl() {
+        let score = 0;
+        const center = [[3, 3], [3, 4], [4, 3], [4, 4]];
+        
+        for (const [r, c] of center) {
+            const piece = this.engine.board[r][c];
+            if (piece) {
+                if (piece === piece.toUpperCase()) score += 10;
+                else score -= 10;
+            }
+        }
+        
+        return score;
+    }
+    
+    minimax(depth, alpha, beta, isMaximizing) {
+        if (depth === 0) {
+            return this.evaluateBoard();
+        }
+        
+        const moves = this.engine.getAllPseudoLegalMoves(
+            isMaximizing ? 'white' : 'black'
+        );
+        
+        if (moves.length === 0) {
+            if (this.engine.isInCheck(isMaximizing ? 'white' : 'black')) {
+                return isMaximizing ? -99999 : 99999;
+            }
+            return 0;
+        }
+        
+        if (isMaximizing) {
+            let maxEval = -Infinity;
+            for (const move of moves) {
+                const savedState = this.engine.getBoardState();
+                this.engine.makeMove(move.fromRow, move.fromCol, move.toRow, move.toCol);
+                const evaluation = this.minimax(depth - 1, alpha, beta, false);
+                this.engine.board = savedState.board;
+                this.engine.currentPlayer = savedState.currentPlayer;
+                this.engine.moveHistory = savedState.moveHistory;
+                this.engine.capturedPieces = savedState.capturedPieces;
+                this.engine.lastMove = savedState.lastMove;
+                this.engine.gameOver = savedState.gameOver;
+                this.engine.gameResult = savedState.gameResult;
+                this.engine.kingPositions = savedState.kingPositions;
+                this.engine.castlingRights = savedState.castlingRights;
+                this.engine.enPassantTarget = savedState.enPassantTarget;
+                
+                maxEval = Math.max(maxEval, evaluation);
+                alpha = Math.max(alpha, evaluation);
+                if (beta <= alpha) break;
+            }
+            return maxEval;
+        } else {
+            let minEval = Infinity;
+            for (const move of moves) {
+                const savedState = this.engine.getBoardState();
+                this.engine.makeMove(move.fromRow, move.fromCol, move.toRow, move.toCol);
+                const evaluation = this.minimax(depth - 1, alpha, beta, true);
+                this.engine.board = savedState.board;
+                this.engine.currentPlayer = savedState.currentPlayer;
+                this.engine.moveHistory = savedState.moveHistory;
+                this.engine.capturedPieces = savedState.capturedPieces;
+                this.engine.lastMove = savedState.lastMove;
+                this.engine.gameOver = savedState.gameOver;
+                this.engine.gameResult = savedState.gameResult;
+                this.engine.kingPositions = savedState.kingPositions;
+                this.engine.castlingRights = savedState.castlingRights;
+                this.engine.enPassantTarget = savedState.enPassantTarget;
+                
+                minEval = Math.min(minEval, evaluation);
+                beta = Math.min(beta, evaluation);
+                if (beta <= alpha) break;
+            }
+            return minEval;
+        }
+    }
+    
+    getBestMove() {
+        const moves = this.engine.getAllPseudoLegalMoves('black');
+        if (moves.length === 0) return null;
+        
+        // Ajouter un peu d'aléatoire pour simuler un niveau 1500
+        const randomFactor = Math.max(0, (1500 - this.strength) / 100);
+        
+        let bestMove = null;
+        let bestScore = Infinity;
+        
+        // Trier les mouvements pour une meilleure efficacité
+        moves.sort((a, b) => {
+            const captureA = this.engine.board[a.toRow][a.toCol] ? 1 : 0;
+            const captureB = this.engine.board[b.toRow][b.toCol] ? 1 : 0;
+            return captureB - captureA;
+        });
+        
+        for (let i = 0; i < moves.length; i++) {
+            const move = moves[i];
+            const savedState = this.engine.getBoardState();
+            
+            this.engine.makeMove(move.fromRow, move.fromCol, move.toRow, move.toCol);
+            const score = this.minimax(this.maxDepth - 1, -Infinity, Infinity, true);
+            
+            this.engine.board = savedState.board;
+            this.engine.currentPlayer = savedState.currentPlayer;
+            this.engine.moveHistory = savedState.moveHistory;
+            this.engine.capturedPieces = savedState.capturedPieces;
+            this.engine.lastMove = savedState.lastMove;
+            this.engine.gameOver = savedState.gameOver;
+            this.engine.gameResult = savedState.gameResult;
+            this.engine.kingPositions = savedState.kingPositions;
+            this.engine.castlingRights = savedState.castlingRights;
+            this.engine.enPassantTarget = savedState.enPassantTarget;
+            
+            // Ajouter du bruit aléatoire
+            const noise = (Math.random() - 0.5) * randomFactor * 50;
+            const finalScore = score + noise;
+            
+            if (finalScore < bestScore) {
+                bestScore = finalScore;
+                bestMove = move;
+            }
+        }
+        
+        return bestMove;
+    }
+    }
